@@ -1,10 +1,10 @@
-# dc-ui
+# dv-ui
 
 > 用数字呈现世界之美
 
 #### Build Setup
 
-``` bash
+```bash
 # install dependencies
 npm install
 

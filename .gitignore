@@ -14,3 +14,4 @@ thumbs.db
 *.ntvs*
 *.njsproj
 package-lock.json
+dist
