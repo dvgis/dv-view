@@ -2,7 +2,7 @@
  * @Author: Caven
  * @Date: 2019-12-23 13:38:32
  * @Last Modified by: Caven
- * @Last Modified time: 2020-03-07 11:51:42
+ * @Last Modified time: 2020-03-08 16:56:30
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -39,6 +39,11 @@ const routes = [
         path: '/tool',
         name: 'tool',
         component: () => import('../views/tool/index.vue')
+      },
+      {
+        path: '/setting',
+        name: 'setting',
+        component: () => import('../views/setting/index.vue')
       }
     ]
   }

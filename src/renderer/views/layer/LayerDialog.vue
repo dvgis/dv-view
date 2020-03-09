@@ -30,15 +30,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item prop="visible" label="显示：">
-        <el-switch
-          size="mini"
-          v-model="layerForm.visible"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
-        ></el-switch
-      ></el-form-item>
-      <el-form-item prop="url" label="数据地址：">
+      <el-form-item prop="url" label="数据地址：" required>
         <el-input v-model="layerForm.url" class="ipt"></el-input>
       </el-form-item>
       <el-form-item
@@ -48,6 +40,14 @@
       >
         <el-input v-model="layerForm.imgUrl" class="ipt"></el-input>
       </el-form-item>
+      <el-form-item prop="visible" label="是否显示：">
+        <el-switch
+          size="mini"
+          v-model="layerForm.visible"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+        ></el-switch
+      ></el-form-item>
     </el-form>
     <div class="btns">
       <el-button type="primary" round @click="handleAdd">添加</el-button>
@@ -89,28 +89,7 @@ export default {
         imgUrl: '',
         visible: true
       },
-      layerTypeList: [
-        {
-          name: '3dtile',
-          label: '3D Tile'
-        },
-        {
-          name: 'cluster',
-          label: '聚合'
-        },
-        {
-          name: 'heat',
-          label: '热区'
-        },
-        {
-          name: 'geojson',
-          label: 'GeoJson'
-        },
-        {
-          name: 'czml',
-          label: 'CZML'
-        }
-      ],
+      layerTypeList: global.layerTypeList,
       dialogVisible: false
     }
   },
@@ -124,8 +103,33 @@ export default {
         this.$message.error('必要字段值为空，请填入。')
         return false
       }
-      this.$emit('on-add', this.layerForm)
+      this.$db
+        .run(
+          'insert into tb_layer_list values (:id,:name,:type,:url,:visible);',
+          {
+            ':id': DC.Util.uuid(),
+            ':name': this.layerForm.name,
+            ':type': this.layerForm.type,
+            ':url': this.layerForm.url,
+            ':visible': this.layerForm.visible ? '1' : '0'
+          }
+        )
+        .then(() => {
+          this.$message.success({
+            message: '添加成功!'
+          })
+          this.$refs['layer-form'].resetFields()
+          this.$emit('on-add')
+        })
+    },
+    getTypeList() {
+      this.$db.prepare('select name,label from tb_layer_type').then(data => {
+        this.layerTypeList = data
+      })
     }
+  },
+  mounted() {
+    this.getTypeList()
   }
 }
 </script>

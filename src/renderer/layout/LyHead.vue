@@ -13,87 +13,35 @@
           <el-menu-item index="layer">图层</el-menu-item>
           <el-menu-item index="scene">场景</el-menu-item>
           <el-menu-item index="tool">工具</el-menu-item>
+          <el-menu-item index="setting">设置</el-menu-item>
         </el-menu>
       </div>
     </div>
     <div class="tool-bar">
       <div
         class="tool scene-tool animated bounceInLeft "
-        v-show="activeMenu === 'scene'"
-      >
-        <span class="tool-item"
-          >地球：<el-switch
-            size="mini"
-            v-model="showGlobe"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-          >
-          </el-switch
-        ></span>
-        <span class="tool-item"
-          >太阳：<el-switch
-            size="mini"
-            v-model="showSun"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-          ></el-switch
-        ></span>
-        <span class="tool-item"
-          >月亮：<el-switch
-            size="mini"
-            v-model="showMoon"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-          ></el-switch
-        ></span>
-        <span class="tool-item"
-          >天空盒：<el-switch
-            size="mini"
-            v-model="showSkyBox"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-          ></el-switch
-        ></span>
-        <span class="tool-item"
-          >大气层：<el-switch
-            size="mini"
-            v-model="showAtmosphere"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-          ></el-switch
-        ></span>
-        <span class="tool-item">
-          光照：<el-switch
-            size="mini"
-            v-model="enableLight"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-          ></el-switch
-        ></span>
-      </div>
-      <div
-        class=" tool scene-tool animated bounceInLeft "
         v-show="activeMenu === 'layer'"
       >
-        <span class="tool-item" @click="showLayerDialog('3dtile')">
-          <svg-icon icon-class="layer" class-name="svg-icon"></svg-icon>3D
-          Tile</span
+        <span
+          class="tool-item"
+          v-for="item in layerTypeList"
+          @click="showLayerDialog(item.name)"
+          :key="item.name"
         >
-        <span class="tool-item" @click="showLayerDialog('cluster')">
           <svg-icon icon-class="layer" class-name="svg-icon"></svg-icon
-          >聚合</span
+          >{{ item.label }}</span
         >
-        <span class="tool-item" @click="showLayerDialog('heat')">
-          <svg-icon icon-class="layer" class-name="svg-icon"></svg-icon
-          >热区</span
+      </div>
+
+      <div class="tool  animated bounceInLeft " v-show="activeMenu === 'tool'">
+        <span
+          class="tool-item"
+          v-for="item in tooTypeList"
+          @click="showLayerDialog(item.name)"
+          :key="item.name"
         >
-        <span class="tool-item" @click="showLayerDialog('geojson')">
-          <svg-icon icon-class="layer" class-name="svg-icon"></svg-icon
-          >GeoJson</span
-        >
-        <span class="tool-item" @click="showLayerDialog('czml')">
-          <svg-icon icon-class="layer" class-name="svg-icon"></svg-icon
-          >Czml</span
+          <svg-icon icon-class="tool" class-name="svg-icon"></svg-icon
+          >{{ item.label }}</span
         >
       </div>
     </div>
@@ -104,12 +52,8 @@ export default {
   name: 'LyHead',
   data() {
     return {
-      showGlobe: true,
-      showSun: true,
-      showMoon: true,
-      showSkyBox: true,
-      showAtmosphere: true,
-      enableLight: false
+      layerTypeList: [],
+      tooTypeList: []
     }
   },
   computed: {
@@ -125,7 +69,23 @@ export default {
     },
     showLayerDialog(type) {
       this.$hub.$emit('on-show-layer-dialog', type)
+    },
+    getTypeList() {
+      this.$db
+        .exec(
+          `select name,label from tb_layer_type;
+         select name,label from tb_tool_type;`
+        )
+        .then(data => {
+          if (data && data.length) {
+            this.layerTypeList = data[0] || []
+            this.tooTypeList = data[1] || []
+          }
+        })
     }
+  },
+  mounted() {
+    this.getTypeList()
   }
 }
 </script>

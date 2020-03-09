@@ -1,6 +1,6 @@
 {
   "name": "dc-ui",
-  "productName": "Dv Ui",
+  "productName": "Digital Visual",
   "version": "0.0.1",
   "author": "Caven Chen",
   "description": "用数字呈现世界之美",
@@ -19,13 +19,13 @@
     "lint:fix": "eslint --ext .js,.vue -f ./node_modules/prettier --fix src",
     "pack": "yarn run pack:main && yarn run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
-    "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "yarn run lint:fix"
+    "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js"
   },
   "dependencies": {
     "animate.css": "^3.7.2",
     "axios": "^0.18.0",
     "element-ui": "^2.13.0",
+    "sql.js": "^1.1.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",

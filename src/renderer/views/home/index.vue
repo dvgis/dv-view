@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     viewerCompleted(viewer) {
-      viewer._comps.mapSwitch.enable = false
+      viewer && (viewer._comps.mapSwitch.enable = false)
       global.viewer = viewer
     }
   }

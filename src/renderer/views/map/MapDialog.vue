@@ -27,7 +27,7 @@
           @change="getStyleList"
         >
           <el-option
-            v-for="item in mapList"
+            v-for="item in mapTypeList"
             :key="item.name"
             :label="item.label"
             :value="item.name"
@@ -35,25 +35,15 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item prop="style" label="样式：" required>
-        <el-radio v-model="mapForm.style" label="elec">
-          <img src="/static/images/elec.png" title="电子图" />
-        </el-radio>
+      <el-form-item prop="style" label="样式：">
         <el-radio
           v-model="mapForm.style"
-          label="img"
-          :disabled="mapForm.type === 'tencent'"
-        >
-          <img src="/static/images/img.png" title="影像图" />
-        </el-radio>
-        <el-radio
-          v-model="mapForm.style"
-          v-for="item in styleList"
-          :key="item.value"
-          :label="item.value"
+          v-for="item in mapStyleList"
+          :key="item.name"
+          :label="item.name"
         >
           <img
-            :src="'/static/images/' + item.value + '.png'"
+            :src="'/static/images/' + item.name + '.png'"
             :title="item.label"
           />
         </el-radio>
@@ -61,7 +51,9 @@
       <el-form-item
         prop="url"
         label="地址："
-        v-if="['wmts', 'arcgis', 'xyz', 'gaea'].indexOf(mapForm.type) >= 0"
+        v-if="
+          ['wmts', 'arcgis', 'xyz', 'gaea', 'single'].indexOf(mapForm.type) >= 0
+        "
       >
         <el-input v-model="mapForm.url" class="ipt"></el-input>
       </el-form-item>
@@ -105,87 +97,71 @@ export default {
       mapForm: {
         name: '',
         type: '',
-        style: '',
+        style: 'elec',
         url: '',
         key: '',
         imgUrl: ''
       },
-      mapList: [
-        {
-          name: 'google',
-          label: '谷歌',
-          styleList: [
-            {
-              value: 'ter',
-              label: '地形'
-            }
-          ]
-        },
-        {
-          name: 'baidu',
-          label: '百度',
-          styleList: [
-            {
-              value: 'dark',
-              label: '黑色'
-            },
-            {
-              value: 'midnight',
-              label: '午夜蓝'
-            }
-          ]
-        },
-        {
-          name: 'amap',
-          label: '高德'
-        },
-        {
-          name: 'tencent',
-          label: '腾讯'
-        },
-        {
-          name: 'tdt',
-          label: '天地图'
-        },
-        {
-          name: 'arcgis',
-          label: 'ArcGis'
-        },
-        {
-          name: 'wmts',
-          label: 'WMTS'
-        },
-        {
-          name: 'xyz',
-          label: 'XYZ'
-        },
-        {
-          name: 'single',
-          label: '单图片'
-        }
-      ],
-      styleList: [],
+      mapTypeList: [],
+      mapStyleList: [],
       dialogVisible: false
     }
   },
   methods: {
     handleClosed() {
       this.$refs['map-form'].resetFields()
+      this.mapStyleList = []
       this.$emit('on-close')
     },
     handleAdd() {
-      if (!this.mapForm.name || !this.mapForm.style || !this.mapForm.style) {
+      if (!this.mapForm.name || !this.mapForm.type) {
         this.$message.error('必要字段值为空，请填入。')
         return false
       }
-      this.$emit('on-add', this.mapForm)
+      this.$db
+        .run(
+          'insert into tb_map_list values (:id,:name,:type,:style,:url,:key,:imgUrl);',
+          {
+            ':id': DC.Util.uuid(),
+            ':name': this.mapForm.name,
+            ':type': this.mapForm.type,
+            ':style': this.mapForm.style,
+            ':url': this.mapForm.url,
+            ':key': this.mapForm.key,
+            ':imgUrl': this.mapForm.imgUrl
+          }
+        )
+        .then(() => {
+          this.$message.success({
+            message: '添加成功!'
+          })
+          this.$refs['map-form'].resetFields()
+          this.$emit('on-add')
+        })
     },
-    getStyleList(val) {
-      let filter = this.mapList.filter(item => item.name === val)
-      if (filter && filter.length) {
-        this.styleList = filter[0].styleList || []
+    getStyleList(type) {
+      if (type) {
+        let typeFilters = this.mapTypeList.filter(item => item.name === type)
+        if (typeFilters && typeFilters.length) {
+          this.$db
+            .prepare(
+              'select name,label from tb_map_style where map_type_id is null or map_type_id = :map_type_id ',
+              { ':map_type_id': typeFilters[0].id }
+            )
+            .then(data => {
+              this.mapStyleList = data
+            })
+        }
       }
+    },
+    getTypeList() {
+      this.$db.prepare('select * from tb_map_type').then(data => {
+        this.mapTypeList = data
+      })
     }
+  },
+  mounted() {
+    this.getTypeList()
   }
 }
 </script>
