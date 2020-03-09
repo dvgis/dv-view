@@ -42,10 +42,7 @@
           :key="item.name"
           :label="item.name"
         >
-          <img
-            :src="'/static/images/' + item.name + '.png'"
-            :title="item.label"
-          />
+          <img :src="getImgPath(item.name)" :title="item.label" />
         </el-radio>
       </el-form-item>
       <el-form-item
@@ -112,6 +109,9 @@ export default {
       this.$refs['map-form'].resetFields()
       this.mapStyleList = []
       this.$emit('on-close')
+    },
+    getImgPath(style) {
+      return require(`../../assets/images/${style}.png`)
     },
     handleAdd() {
       if (!this.mapForm.name || !this.mapForm.type) {

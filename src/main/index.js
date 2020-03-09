@@ -52,6 +52,10 @@ function createWindow() {
         ]
       : []),
     {
+      label: 'Edit',
+      submenu: [{ role: 'copy' }, { role: 'paste' }]
+    },
+    {
       label: 'View',
       submenu: [
         { role: 'reload' },

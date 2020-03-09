@@ -2,7 +2,7 @@
  * @Author: Caven
  * @Date: 2020-03-09 10:39:47
  * @Last Modified by: Caven
- * @Last Modified time: 2020-03-09 12:27:06
+ * @Last Modified time: 2020-03-09 13:06:31
  */
 
 let sql = `
@@ -78,5 +78,10 @@ let sql = `
   insert into tb_map_style(id,name,label,map_type_id) values ('3ad45d65-61bd-3cd9-b251-0d785b60f88d','dark','黑色','c8a9a79c-61ba-11ea-9e87-0221860e9b7e');
   insert into tb_map_style(id,name,label,map_type_id) values ('26f3b02f-a67c-389d-8525-500de790b958','midnight','午夜蓝','c8a9a79c-61ba-11ea-9e87-0221860e9b7e');
 
+  insert into tb_layer_type(id,name,label) values ('2000c9fc-2500-3a57-aedd-91c7be04648c','3dtile','3D Tile');
+  insert into tb_layer_type(id,name,label) values ('7565f6b6-2ac5-3002-844c-9911169e9eef','cluster','聚合');
+  insert into tb_layer_type(id,name,label) values ('ca29d7b9-f791-3e17-8856-6e31cb77be20','heat','热区');
+  insert into tb_layer_type(id,name,label) values ('80d77a60-8931-3fd6-89c7-512879aabc29','geojson','GeoJson');
+  insert into tb_layer_type(id,name,label) values ('e975630d-2eb4-39bb-b2a7-d393f52d33e6','czml','Czml');
    `
 export default sql
