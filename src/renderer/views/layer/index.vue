@@ -98,7 +98,6 @@ export default {
               break
             case 'cluster':
               dataLayer = new DC.GeoJsonLayer('data', options.url)
-              console.log(dataLayer)
               layer = new DC.ClusterLayer(options.id)
               dataLayer.eachOverlay(item => {
                 if (item.billboard) {
