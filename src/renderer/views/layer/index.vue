@@ -7,14 +7,7 @@
           class-name="svg-icon"
           style="margin-right:5px"
         ></svg-icon
-        >图层树</span
-      >
-      <span>
-        <svg-icon
-          :icon-class="isMax ? 'min' : 'max'"
-          @on-click="changeHeight"
-          class-name="svg-icon"
-        ></svg-icon>
+        >图层树
       </span>
     </div>
     <div class="layer-tree">
@@ -55,6 +48,7 @@
 </template>
 <script>
 import LayerDialog from './LayerDialog'
+import point_img from '@/assets/images/point.png'
 
 export default {
   name: 'Layer',
@@ -76,7 +70,9 @@ export default {
       this.$refs['layer'].style.height = this.isMax ? '60vh' : '50px'
     },
 
-    handleAdd(formData) {},
+    handleAdd() {
+      this.getLayerList()
+    },
     showDialog(type) {
       this.layerType = type
       this.dialogVisible = true
@@ -87,6 +83,7 @@ export default {
     },
     createLayer(options) {
       let layer = undefined
+      let dataLayer = undefined
       if (global.viewer) {
         layer = global.viewer.getLayer(options.id)
         if (!layer) {
@@ -98,6 +95,48 @@ export default {
                 name: options.name
               }
               layer.addOverlay(tileset)
+              break
+            case 'cluster':
+              dataLayer = new DC.GeoJsonLayer('data', options.url)
+              console.log(dataLayer)
+              layer = new DC.ClusterLayer(options.id)
+              dataLayer.eachOverlay(item => {
+                if (item.billboard) {
+                  layer.addOverlay(
+                    new DC.Billboard(
+                      DC.T.transformCartesianToWSG84(
+                        item.position.getValue(DC.JulianDate.now())
+                      ),
+                      options.imgUrl || point_img
+                    )
+                  )
+                }
+              })
+
+              break
+            case 'heat':
+              dataLayer = new DC.GeoJsonLayer('data', options.url)
+              let bounds = []
+              if (options.bounds) {
+              }
+              layer = new DC.HeatmapLayer(options.id, bounds)
+              let positions = []
+              dataLayer.eachOverlay(item => {
+                if (item.billboard) {
+                  positions.push(
+                    DC.T.transformCartesianToWSG84(
+                      item.position.getValue(DC.JulianDate.now())
+                    )
+                  )
+                }
+              })
+              layer.setPositions(positions)
+              break
+            case 'geojson':
+              layer = new DC.GeoJsonLayer(options.id, options.url)
+              break
+            case 'czml':
+              layer = new DC.CzmlLayer(options.id, options.url)
               break
             default:
               break
@@ -150,6 +189,7 @@ export default {
             this.$message.success({
               message: '删除成功!'
             })
+            global.viewer.removeLayer(global.viewer.getLayer(layer.id))
             this.getLayerList()
           })
       })
@@ -219,6 +259,9 @@ export default {
     justify-content: space-between;
   }
   .layer-tree {
+    height: calc(100% - 80px);
+    overflow: hidden;
+    overflow-y: auto;
     .tree-item {
       flex: 1;
       display: flex;

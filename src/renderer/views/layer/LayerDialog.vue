@@ -36,9 +36,16 @@
       <el-form-item
         prop="imgUrl"
         label="要素图片："
-        v-if="['geojson'].indexOf(layerForm.type) >= 0"
+        v-if="['geojson', 'cluster'].indexOf(layerForm.type) >= 0"
       >
         <el-input v-model="layerForm.imgUrl" class="ipt"></el-input>
+      </el-form-item>
+      <el-form-item
+        prop="bounds"
+        label="热区范围："
+        v-if="['heat'].indexOf(layerForm.type) >= 0"
+      >
+        <el-input v-model="layerForm.bounds" class="ipt"></el-input>
       </el-form-item>
       <el-form-item prop="visible" label="是否显示：">
         <el-switch
@@ -87,6 +94,7 @@ export default {
         type: '',
         url: '',
         imgUrl: '',
+        bounds: '',
         visible: true
       },
       layerTypeList: global.layerTypeList,
@@ -99,10 +107,16 @@ export default {
       this.$emit('on-close')
     },
     handleAdd() {
-      if (!this.layerForm.name || !this.layerForm.type || !this.layerForm.url) {
+      if (
+        !this.layerForm.name ||
+        !this.layerForm.type ||
+        !this.layerForm.url ||
+        (this.layerForm.type === 'heat' && !this.layerForm.bounds)
+      ) {
         this.$message.error('必要字段值为空，请填入。')
         return false
       }
+
       this.$db
         .run(
           'insert into tb_layer_list values (:id,:name,:type,:url,:visible);',
