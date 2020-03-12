@@ -1,18 +1,16 @@
 <template>
-  <div class="setting module" ref="setting"></div>
+  <div class="widget module" ref="widget"></div>
 </template>
 <script>
 export default {
-  name: 'Setting',
+  name: 'Widget',
   components: {},
   data() {
     return {}
-  },
-  methods: {}
+  }
 }
 </script>
-
 <style lang="scss" scoped>
-.setting {
+.tool {
 }
 </style>

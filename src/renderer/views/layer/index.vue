@@ -7,7 +7,7 @@
           class-name="svg-icon"
           style="margin-right:5px"
         ></svg-icon
-        >图层树
+        >图层
       </span>
     </div>
     <div class="layer-tree">
@@ -38,10 +38,12 @@
         </span>
       </el-tree>
     </div>
+    <div class="tool">
+      <el-button round @click="dialogVisible = true">添加图层</el-button>
+    </div>
     <layer-dialog
       :visible.sync="dialogVisible"
-      :layer-type="layerType"
-      @on-close="closeDialog"
+      @on-close="dialogVisible = false"
       @on-add="handleAdd"
     ></layer-dialog>
   </div>
@@ -72,14 +74,6 @@ export default {
 
     handleAdd() {
       this.getLayerList()
-    },
-    showDialog(type) {
-      this.layerType = type
-      this.dialogVisible = true
-    },
-    closeDialog() {
-      this.layerType = ''
-      this.dialogVisible = false
     },
     createLayer(options) {
       let layer = undefined
@@ -160,7 +154,7 @@ export default {
         this.layerList = [
           {
             id: 'root',
-            name: '图层结构',
+            name: '图层树',
             children: data
           }
         ]
@@ -211,7 +205,6 @@ export default {
   },
   mounted() {
     this.getLayerList()
-    this.$hub.$on('on-show-layer-dialog', this.showDialog)
   }
 }
 </script>
@@ -231,18 +224,7 @@ export default {
 
 <style lang="scss" scoped>
 .layer {
-  position: fixed;
-  overflow: hidden;
-  width: 250px;
-  height: 60vh;
-  top: 150px;
-  left: 30px;
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 6px;
-  border: 1px solid #cecece;
-  box-shadow: 2px 2px 4px #cecece;
-  transition: height 0.8s;
+  height: 100%;
   .svg-icon {
     display: inline-block;
     vertical-align: middle;
@@ -258,7 +240,7 @@ export default {
     justify-content: space-between;
   }
   .layer-tree {
-    height: calc(100% - 80px);
+    height: calc(100% - 115px);
     overflow: hidden;
     overflow-y: auto;
     .tree-item {

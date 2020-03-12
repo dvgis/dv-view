@@ -69,7 +69,6 @@ export default {
   methods: {
     changeHeight() {
       this.isMax = !this.isMax
-      this.$refs['map'].style.height = this.isMax ? '60vh' : '50px'
     },
     handleAdd() {
       this.getMapList()
@@ -184,37 +183,22 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.map {
-  .el-button {
-    width: 150px;
-    z-index: 1000;
-    background: rgba(0, 0, 0, 0.5);
-    border-color: #61f7fe;
-    color: #fff;
-  }
-}
-</style>
 <style lang="scss" scoped>
 .map {
-  width: 250px;
-  height: 60vh;
+  height: 100%;
   .map-list {
     width: 100%;
-    height: calc(100% - 105px);
+    height: calc(100% - 115px);
     color: rgb(15, 10, 10);
     overflow: hidden;
     overflow-y: auto;
     .map-item {
-      position: relative;
-      width: 40%;
-      display: inline-block;
-      overflow: hidden;
-      margin: 5px 0px 5px 18px;
+      margin: 10px auto;
       cursor: pointer;
+      text-align: center;
       img {
-        width: 100px;
-        height: 100px;
+        width: 200px;
+        height: 120px;
         overflow: hidden;
       }
       p {
@@ -227,9 +211,6 @@ export default {
         color: orange;
       }
     }
-  }
-  .tool {
-    text-align: center;
   }
 }
 </style>

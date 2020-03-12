@@ -1,13 +1,8 @@
 <template>
   <div class="home">
-    <div>
-      <ly-head></ly-head>
-      <ly-content></ly-content>
-      <ly-foot></ly-foot>
-    </div>
-    <div class="viewer">
-      <viewer @viewer-completed="viewerCompleted"></viewer>
-    </div>
+    <ly-head></ly-head>
+    <ly-content></ly-content>
+    <ly-foot></ly-foot>
   </div>
 </template>
 <script>
@@ -23,25 +18,15 @@ export default {
   },
   data() {
     return {}
-  },
-  methods: {
-    viewerCompleted(viewer) {
-      viewer && (viewer._comps.mapSwitch.enable = false)
-      global.viewer = viewer
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .home {
+  position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  .viewer {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
 }
 </style>

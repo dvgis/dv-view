@@ -1,5 +1,5 @@
 <template>
-  <div class="tool"></div>
+  <div class="tool module" ref="tool"></div>
 </template>
 <script>
 export default {
@@ -12,8 +12,5 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tool {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
 }
 </style>

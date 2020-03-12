@@ -20,7 +20,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item prop="type" label="图层类型：" required>
-        <el-select v-model="layerForm.type" class="select" disabled>
+        <el-select v-model="layerForm.type" class="select">
           <el-option
             v-for="item in layerTypeList"
             :key="item.name"

@@ -2,7 +2,7 @@
  * @Author: Caven
  * @Date: 2019-12-23 13:38:32
  * @Last Modified by: Caven
- * @Last Modified time: 2020-03-08 16:56:30
+ * @Last Modified time: 2020-03-11 23:25:34
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -34,6 +34,11 @@ const routes = [
         path: '/scene',
         name: 'scene',
         component: () => import('../views/scene/index.vue')
+      },
+      {
+        path: '/widget',
+        name: 'widget',
+        component: () => import('../views/widget/index.vue')
       },
       {
         path: '/tool',

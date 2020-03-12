@@ -11,39 +11,26 @@
         >
           <el-menu-item index="map">地图</el-menu-item>
           <el-menu-item index="layer">图层</el-menu-item>
+          <el-menu-item index="widget">组件</el-menu-item>
           <el-menu-item index="scene">场景</el-menu-item>
           <el-menu-item index="tool">工具</el-menu-item>
           <el-menu-item index="setting">设置</el-menu-item>
         </el-menu>
       </div>
     </div>
-    <div class="tool-bar">
-      <div
-        class="tool scene-tool animated bounceInLeft "
-        v-show="activeMenu === 'layer'"
-      >
-        <span
-          class="tool-item"
-          v-for="item in layerTypeList"
-          @click="showLayerDialog(item.name)"
-          :key="item.name"
-        >
-          <svg-icon icon-class="layer" class-name="svg-icon"></svg-icon
-          >{{ item.label }}</span
-        >
-      </div>
-
-      <div class="tool  animated bounceInLeft " v-show="activeMenu === 'tool'">
-        <span
-          class="tool-item"
-          v-for="item in tooTypeList"
-          @click="showLayerDialog(item.name)"
-          :key="item.name"
-        >
-          <svg-icon icon-class="tool" class-name="svg-icon"></svg-icon
-          >{{ item.label }}</span
-        >
-      </div>
+    <div class="tool">
+      <svg-icon
+        icon-class="3d"
+        class-name="svg-icon"
+        :class="{ active: is3d }"
+        @on-click="changeSceneMode"
+      ></svg-icon>
+      <svg-icon
+        icon-class="fullscreen"
+        class-name="svg-icon"
+        style="width:20px"
+        @on-click="fullScreen"
+      ></svg-icon>
     </div>
   </div>
 </template>
@@ -52,8 +39,7 @@ export default {
   name: 'LyHead',
   data() {
     return {
-      layerTypeList: [],
-      tooTypeList: []
+      is3d: true
     }
   },
   computed: {
@@ -70,23 +56,28 @@ export default {
     showLayerDialog(type) {
       this.$hub.$emit('on-show-layer-dialog', type)
     },
-    getTypeList() {
-      this.$db
-        .exec(
-          `select name,label from tb_layer_type;
-         select name,label from tb_tool_type;`
-        )
-        .then(data => {
-          if (data && data.length) {
-            this.layerTypeList = data[0] || []
-            this.tooTypeList = data[1] || []
-          }
-        })
+    changeSceneMode() {
+      this.is3d = !this.is3d
+      if (this.is3d) {
+        global.viewer && global.viewer.scene.morphTo3D()
+      } else {
+        global.viewer && global.viewer.scene.morphTo2D()
+      }
+    },
+    fullScreen() {
+      let element = document.getElementById('viewer-container')
+      if (element.requestFullscreen) {
+        element.requestFullscreen()
+      } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen()
+      } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen()
+      } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen()
+      }
     }
   },
-  mounted() {
-    this.getTypeList()
-  }
+  mounted() {}
 }
 </script>
 
@@ -114,12 +105,13 @@ export default {
 
 <style lang="scss" scoped>
 .ly-head {
-  position: absolute;
-  z-index: 1;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  height: 60px;
+  background-image: linear-gradient(-180deg, #393939 0%, #2d2d2d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
   .nav-bar {
-    padding: 10px 0px 5px 20px;
     display: flex;
     .title {
       img {
@@ -138,25 +130,20 @@ export default {
       display: flex;
       align-items: center;
       .menu-list {
-        background: rgba(0, 0, 0, 0);
+        background: transparent;
         color: #fff;
       }
     }
   }
-
-  .tool-bar {
-    color: #fff;
-    margin: 5px 0px;
-    .tool {
-      padding-top: 5px;
-      padding-left: 15px;
-      border-top: 0.5px solid #cecece;
-      .tool-item {
-        margin-left: 10px;
-        cursor: pointer;
-        .svg-icon {
-          margin-right: 5px;
-        }
+  .tool {
+    .svg-icon {
+      width: 30px;
+      height: 30px;
+      color: #fff;
+      margin-left: 15px;
+      cursor: pointer;
+      &.active {
+        color: rgb(7, 110, 245);
       }
     }
   }
