@@ -395,7 +395,7 @@ export default {
     },
     'bloom.enable': value => {
       global.viewer &&
-        (global.viewer.scene.postProcessStages.bloom.enable = value)
+        (global.viewer.scene.postProcessStages.bloom.enabled = value)
     },
     'bloom.contrast': value => {
       global.viewer &&

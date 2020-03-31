@@ -16,6 +16,7 @@ export default {
     viewerCompleted(viewer) {
       viewer && (viewer._comps.mapSwitch.enable = false)
       global.viewer = viewer
+      this.$hub.$emit('on-viewer-completed')
     }
   }
 }

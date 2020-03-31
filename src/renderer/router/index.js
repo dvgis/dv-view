@@ -2,7 +2,7 @@
  * @Author: Caven
  * @Date: 2019-12-23 13:38:32
  * @Last Modified by: Caven
- * @Last Modified time: 2020-03-11 23:25:34
+ * @Last Modified time: 2020-03-12 20:38:55
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -19,6 +19,7 @@ const routes = [
     path: '/home',
     name: 'home',
     component: () => import('../views/home/index.vue'),
+    redirect: 'map',
     children: [
       {
         path: '/map',

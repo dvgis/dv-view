@@ -29,10 +29,10 @@ export default {
 .index {
   .info {
     .el-button {
-      width: 150px;
+      width: 180px;
       z-index: 1000;
-      background: rgba(0, 0, 0, 0.5);
-      border-color: #61f7fe;
+      background: rgba(39, 39, 39, 0.5);
+      border-color: #11a0f3;
       color: #fff;
     }
   }
@@ -62,13 +62,14 @@ export default {
     color: #fff;
     font-size: 25px;
     margin: 20px 30px;
+    font-style: oblique;
     img {
       display: inline-block;
       vertical-align: middle;
     }
     .desc {
-      margin-top: 10px;
-      padding-left: 20px;
+      margin-top: -7px;
+      padding-left: 79px;
       color: #fff;
       font-size: 20px;
     }

@@ -26,6 +26,11 @@
         @on-click="changeSceneMode"
       ></svg-icon>
       <svg-icon
+        icon-class="home"
+        class-name="svg-icon home-button"
+        @on-click="gotoHome"
+      ></svg-icon>
+      <svg-icon
         icon-class="fullscreen"
         class-name="svg-icon"
         style="width:20px"
@@ -63,6 +68,9 @@ export default {
       } else {
         global.viewer && global.viewer.scene.morphTo2D()
       }
+    },
+    gotoHome() {
+      global.viewer && global.viewer.camera.flyHome()
     },
     fullScreen() {
       let element = document.getElementById('viewer-container')
@@ -136,6 +144,8 @@ export default {
     }
   }
   .tool {
+    display: flex;
+    align-items: center;
     .svg-icon {
       width: 30px;
       height: 30px;
@@ -144,6 +154,11 @@ export default {
       cursor: pointer;
       &.active {
         color: rgb(7, 110, 245);
+      }
+
+      &.home-button {
+        width: 24px;
+        height: 24px;
       }
     }
   }

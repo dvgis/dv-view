@@ -178,6 +178,7 @@ export default {
     }
   },
   mounted() {
+    this.$hub.$on('on-viewer-completed', this.getMapList)
     this.getMapList()
   }
 }
