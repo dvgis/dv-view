@@ -2,26 +2,42 @@
  * @Author: Caven
  * @Date: 2020-03-08 12:36:39
  * @Last Modified by: Caven
- * @Last Modified time: 2020-03-09 11:51:40
+ * @Last Modified time: 2020-03-31 09:15:09
  */
 
 import Vue from 'vue'
-
+import sql from '../sql'
 const fs = require('fs')
-const path = require('path')
+const HOME_PATH = process.env.HOME || process.env.USERPROFILE
 
 class DBLoader {
   constructor() {
-    this._db = undefined
+    initSqlJs({
+      locateFile: filename => `static/libs/db/${filename}`
+    }).then(SQL => {
+      fs.exists(`${HOME_PATH}/.db`, exists => {
+        !exists && fs.mkdirSync(`${HOME_PATH}/.db`)
+      })
+      fs.exists(`${HOME_PATH}/.db/dv.sqlite`, exists => {
+        if (!exists) {
+          let db = new SQL.Database()
+          db.run(sql)
+          let buffer = Buffer.from(db.export(), 'base64')
+          fs.writeFileSync(`${HOME_PATH}/.db/dv.sqlite`, buffer)
+          db.close()
+        }
+        this._db = new SQL.Database(
+          fs.readFileSync(`${HOME_PATH}/.db/dv.sqlite`)
+        )
+      })
+    })
   }
 
   load() {
     let self = this
     Vue.use({
       install(Vue, options) {
-        self._db = global.DB
         Vue.prototype.$db = self
-        delete global.DB
       }
     })
   }
@@ -75,7 +91,7 @@ class DBLoader {
         this._db.run(sql, params)
         let data = this._db.export()
         fs.writeFileSync(
-          process.env.HOME + '/.db/dv.sqlite',
+          `${HOME_PATH}/.db/dv.sqlite`,
           Buffer.from(data, 'base64')
         )
         resolve()
