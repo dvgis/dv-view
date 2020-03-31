@@ -144,12 +144,9 @@ export default {
         data.forEach(item => {
           if (item.visible === '1') {
             this.checkedList.push(item.id)
+            let layer = this.createLayer(item)
+            global.viewer && layer && global.viewer.addLayer(layer)
           }
-          let layer = this.createLayer(item)
-          global.viewer && layer && global.viewer.addLayer(layer)
-          global.viewer &&
-            (global.viewer.getLayer(item.id).show =
-              item.visible === '1' ? true : false)
         })
         this.layerList = [
           {
@@ -197,8 +194,12 @@ export default {
           ':id': data.id,
           ':visible': checked ? '1' : '0'
         })
-        .then(data => {
+        .then(res => {
           let layer = global.viewer.getLayer(layerId)
+          if (!layer) {
+            layer = this.createLayer(data)
+            global.viewer && layer && global.viewer.addLayer(layer)
+          }
           layer && (layer.show = checked)
         })
     }

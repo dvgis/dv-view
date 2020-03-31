@@ -2,7 +2,7 @@
  * @Author: Caven
  * @Date: 2020-03-09 10:39:47
  * @Last Modified by: Caven
- * @Last Modified time: 2020-03-09 13:06:31
+ * @Last Modified time: 2020-03-31 09:27:42
  */
 
 let sql = `
@@ -69,7 +69,7 @@ let sql = `
   insert into tb_map_type(id,name,label) values ('c1e36ebb-20cf-3478-a3c9-b029e6bead39','tencent','腾讯');
   insert into tb_map_type(id,name,label) values ('b4f046d0-9ded-355e-b6cd-9c431a3f8bbb','tdt','天地图');
   insert into tb_map_type(id,name,label) values ('d28c312d-ebf9-3c3a-ab6c-335ff873f43e','arcgis','ArcGis');
-  insert into tb_map_type(id,name,label) values ('e8010b08-0a13-390a-bdac-cc454a931f16','singel','单图片');
+  insert into tb_map_type(id,name,label) values ('e8010b08-0a13-390a-bdac-cc454a931f16','single','单图片');
   insert into tb_map_type(id,name,label) values ('243088b3-1bf9-3700-b75e-069c40aa52e5','wmts','WMTS');
   insert into tb_map_type(id,name,label) values ('0075ef3b-5114-3a25-b528-916d37c267f2','xyz','XYZ');
   insert into tb_map_style(id,name,label) values ('15e61fba-80f8-351f-98e8-2f63ad630653','elec','电子图');
